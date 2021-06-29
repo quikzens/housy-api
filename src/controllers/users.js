@@ -18,3 +18,22 @@ exports.signIn = (req, res) => {
     },
   })
 }
+
+exports.signUp = (req, res) => {
+  const newUser = req.body
+  const user = users.find((user) => user.username === newUser.username)
+
+  if (user) {
+    res.send('Gunakan username yang lain')
+    return false
+  }
+
+  users.push({ ...newUser })
+
+  res.send({
+    data: {
+      username: newUser.username,
+      token: '0sdnOJIoinsdo9878IJNBIniiuinINiuYIUY',
+    },
+  })
+}
