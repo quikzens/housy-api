@@ -1,4 +1,4 @@
-const users = require('../data/users')
+const users = require('../data/usersData')
 
 exports.signIn = (req, res) => {
   const { username, password } = req.body
@@ -28,9 +28,9 @@ exports.signUp = (req, res) => {
     return false
   }
 
-  users.push({ ...newUser })
+  users.push(newUser)
 
-  res.send({
+  res.status(201).send({
     data: {
       username: newUser.username,
       token: '0sdnOJIoinsdo9878IJNBIniiuinINiuYIUY',
