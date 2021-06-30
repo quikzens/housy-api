@@ -1,72 +1,182 @@
-let houses = require('../data/housesData')
-const cities = require('../data/citiesData')
+const { House, City } = require('../../models')
 
-exports.getHouses = (req, res) => {
-  res.status(200).send(houses)
+exports.getHouses = async (req, res) => {
+  try {
+    const houses = await House.findAll({
+      include: [
+        {
+          model: City,
+          as: 'city',
+        },
+      ],
+      attributes: {
+        exclude: ['created_at', 'updated_at'],
+      },
+    })
+
+    res.send({
+      status: 'success',
+      message: 'resources has successfully get',
+      data: houses,
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).send({
+      status: 'failed',
+      message: 'internal server error',
+    })
+  }
 }
 
-exports.getHouse = (req, res) => {
+exports.getHouse = async (req, res) => {
   const id = req.params.id
-  const house = houses.find((house) => house.id == id)
+  try {
+    let house = await House.findOne({
+      where: {
+        id: id,
+      },
+      include: [
+        {
+          model: City,
+          as: 'city',
+          attributes: {
+            exclude: ['created_at', 'updated_at'],
+          },
+        },
+      ],
+      attributes: {
+        exclude: ['created_at', 'updated_at', 'city_id'],
+      },
+    })
 
-  if (!house) {
-    res.status(404).send(`Tak ada data house dengan id ${id}`)
-    return false
-  }
-
-  res.status(200).send(house)
-}
-
-exports.addHouse = (req, res) => {
-  let newHouse = req.body
-  const city = cities.find((city) => newHouse.cityId == city.id)
-  const lastId = houses[houses.length - 1].id
-
-  newHouse = {
-    id: lastId + 1,
-    ...newHouse,
-    city: city,
-  }
-  delete newHouse.cityId
-
-  houses.push(newHouse)
-
-  res.status(200).send(houses)
-}
-
-exports.editHouse = (req, res) => {
-  const id = req.params.id
-  const editHouse = req.body
-  let house = houses.find((house) => house.id == id)
-
-  if (!house) {
-    res.status(401).send(`Tak ada data house dengan id ${id}`)
-    return false
-  }
-
-  house = {
-    ...house,
-    ...editHouse,
-  }
-
-  // handle city
-  if (house.cityId && house.cityId !== house.city.id) {
-    const city = cities.find((city) => house.cityId == city.id)
+    // change amenities type, so it fits in frontend
+    house = JSON.parse(JSON.stringify(house))
     house = {
       ...house,
-      city,
+      amenities: house.amenities.split(','),
     }
-    delete house.cityId
-  }
 
-  res.status(200).send(house)
+    res.send({
+      status: 'success',
+      message: 'resource has successfully get',
+      data: house,
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).send({
+      status: 'failed',
+      message: 'internal server error',
+    })
+  }
 }
 
-exports.deleteHouse = (req, res) => {
+exports.addHouse = async (req, res) => {
+  let houseData = req.body
+  // change amenities type, so it fits in database
+  houseData = {
+    ...houseData,
+    amenities: houseData.amenities.join(),
+    created_at: new Date(),
+    updated_at: new Date(),
+  }
+
+  try {
+    let house = await House.create(houseData)
+
+    house = await House.findOne({
+      where: {
+        id: house.id,
+      },
+      include: [
+        {
+          model: City,
+          as: 'city',
+          attributes: {
+            exclude: ['created_at', 'updated_at'],
+          },
+        },
+      ],
+      attributes: {
+        exclude: ['created_at', 'updated_at', 'city_id'],
+      },
+    })
+
+    // change amenities type, so it fits in frontend
+    house = JSON.parse(JSON.stringify(house))
+    house = {
+      ...house,
+      amenities: house.amenities.split(','),
+    }
+
+    res.send({
+      status: 'success',
+      message: 'resource has successfully added',
+      data: house,
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).send({
+      status: 'failed',
+      message: 'internal server error',
+    })
+  }
+}
+
+exports.editHouse = async (req, res) => {
   const id = req.params.id
-  const newHouses = houses.filter((house) => house.id != id)
 
-  houses = newHouses
+  try {
+    await House.update(req.body, {
+      where: {
+        id,
+      },
+    })
 
-  res.status(200).send({ id })
+    const house = await House.findOne({
+      where: {
+        id,
+      },
+      attributes: {
+        exclude: ['created_at', 'updated_at'],
+      },
+    })
+
+    res.send({
+      status: 'successs',
+      message: 'resource has successfully deleted',
+      data: house,
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).send({
+      status: 'failed',
+      message: 'internal server error',
+    })
+  }
+}
+
+exports.deleteHouse = async (req, res) => {
+  const id = req.params.id
+
+  try {
+    await House.destroy({
+      where: {
+        id,
+      },
+    })
+
+    res.send({
+      status: 'successs',
+      message: 'resource has successfully deleted',
+      data: {
+        id,
+      },
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).send({
+      status: 'failed',
+      message: 'internal server error',
+    })
+  }
 }
