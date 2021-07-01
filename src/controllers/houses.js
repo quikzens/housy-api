@@ -2,7 +2,7 @@ const { House, City } = require('../../models')
 
 exports.getHouses = async (req, res) => {
   try {
-    const houses = await House.findAll({
+    let houses = await House.findAll({
       include: [
         {
           model: City,
@@ -12,6 +12,15 @@ exports.getHouses = async (req, res) => {
       attributes: {
         exclude: ['created_at', 'updated_at'],
       },
+    })
+
+    // change amenities type, so it fits in frontend
+    houses = JSON.parse(JSON.stringify(houses))
+    houses = houses.map((house) => {
+      return {
+        ...house,
+        amenities: house.amenities.split(','),
+      }
     })
 
     res.send({
@@ -72,6 +81,7 @@ exports.getHouse = async (req, res) => {
 
 exports.addHouse = async (req, res) => {
   let houseData = req.body
+
   // change amenities type, so it fits in database
   houseData = {
     ...houseData,
