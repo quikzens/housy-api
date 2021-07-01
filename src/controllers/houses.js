@@ -143,7 +143,7 @@ exports.editHouse = async (req, res) => {
 
     res.send({
       status: 'successs',
-      message: 'resource has successfully deleted',
+      message: 'resource has successfully updated',
       data: house,
     })
   } catch (error) {

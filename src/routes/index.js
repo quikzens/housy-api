@@ -7,6 +7,12 @@ const {
   editHouse,
   deleteHouse,
 } = require('../controllers/houses')
+const {
+  addTransaction,
+  editTransaction,
+  getTransaction,
+  getTransactions,
+} = require('../controllers/transactions')
 
 const route = Router()
 
@@ -18,5 +24,10 @@ route.get('/house/:id', getHouse)
 route.post('/house', addHouse)
 route.patch('/house/:id', editHouse)
 route.delete('/house/:id', deleteHouse)
+
+route.post('/transaction', addTransaction)
+route.patch('/order/:id', editTransaction)
+route.get('/order/:id', getTransaction)
+route.get('/orders', getTransactions)
 
 module.exports = route
