@@ -35,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
       amenities: DataTypes.STRING,
       bedroom: DataTypes.INTEGER,
       bathroom: DataTypes.INTEGER,
+      image: DataTypes.STRING,
       created_at: DataTypes.DATE,
       updated_at: DataTypes.DATE,
     },

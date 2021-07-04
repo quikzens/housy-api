@@ -4,7 +4,6 @@ const secretKey = 'absolutelyfreakingsecret'
 exports.auth = (req, res, next) => {
   try {
     let header = req.header('Authorization')
-    console.log(header)
 
     if (!header) {
       return res.send({

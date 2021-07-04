@@ -1,8 +1,33 @@
 const { House, City } = require('../../models')
+const { Op } = require('sequelize')
+const { lte, like } = Op
 
 exports.getHouses = async (req, res) => {
+  const path = process.env.PATH_FILE
+  let filters = req.query
+
+  if (filters.hasOwnProperty('below_price')) {
+    filters = {
+      ...filters,
+      price: {
+        [lte]: parseInt(filters.below_price),
+      },
+    }
+    delete filters.below_price
+  }
+
+  if (filters.hasOwnProperty('amenities')) {
+    filters = {
+      ...filters,
+      amenities: {
+        [like]: '%' + filters.amenities + '%',
+      },
+    }
+  }
+
   try {
     let houses = await House.findAll({
+      where: { ...filters },
       include: [
         {
           model: City,
@@ -20,6 +45,7 @@ exports.getHouses = async (req, res) => {
       return {
         ...house,
         amenities: house.amenities.split(','),
+        image: house.image ? path + house.image : null,
       }
     })
 
@@ -80,17 +106,28 @@ exports.getHouse = async (req, res) => {
 }
 
 exports.addHouse = async (req, res) => {
+  const path = process.env.PATH_FILE
   let houseData = req.body
+  const image = req.files.imageFile[0].filename
 
   // change amenities type, so it fits in database
   houseData = {
     ...houseData,
-    amenities: houseData.amenities.join(),
+    image,
     created_at: new Date(),
     updated_at: new Date(),
   }
 
   try {
+    const checkCity = await City.findOne({
+      where: { id: houseData.city_id },
+    })
+    if (!checkCity) {
+      return res.send({
+        message: `Tidak ada city dengan id ${houseData.city_id}`,
+      })
+    }
+
     let house = await House.create(houseData)
 
     house = await House.findOne({
@@ -116,6 +153,7 @@ exports.addHouse = async (req, res) => {
     house = {
       ...house,
       amenities: house.amenities.split(','),
+      image: path + image,
     }
 
     res.send({

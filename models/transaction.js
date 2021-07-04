@@ -14,6 +14,13 @@ module.exports = (sequelize, DataTypes) => {
           name: 'house_id',
         },
       })
+
+      Transaction.belongsTo(models.User, {
+        as: 'user',
+        foreignKey: {
+          name: 'user_id',
+        },
+      })
     }
   }
 
