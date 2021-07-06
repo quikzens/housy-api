@@ -1,13 +1,31 @@
-const { User } = require('../../models')
+const { User, House, City } = require('../../models')
 const joi = require('joi')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
-const secretKey = 'absolutelyfreakingsecret'
+const secretKey = process.env.SECRET_KEY
 
 exports.getUsers = async (req, res) => {
   try {
     const users = await User.findAll({
+      include: [
+        {
+          model: House,
+          as: 'houses',
+          include: [
+            {
+              model: City,
+              as: 'city',
+              attributes: {
+                exclude: ['created_at', 'updated_at'],
+              },
+            },
+          ],
+          attributes: {
+            exclude: ['created_at', 'updated_at', 'city_id', 'owner_id'],
+          },
+        },
+      ],
       attributes: {
         exclude: ['createdAt', 'updatedAt', 'password'],
       },
@@ -73,6 +91,7 @@ exports.signUp = async (req, res) => {
     const token = jwt.sign(
       {
         id: user.id,
+        status: user.list_as,
       },
       secretKey
     )
@@ -131,13 +150,14 @@ exports.signIn = async (req, res) => {
     if (!isValidPassword) {
       return res.send({
         status: 'failed',
-        message: "Email or Password don't match",
+        message: "Username or Password don't match",
       })
     }
 
     const token = jwt.sign(
       {
         id: checkUsername.id,
+        status: checkUsername.list_as,
       },
       secretKey
     )

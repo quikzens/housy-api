@@ -1,6 +1,7 @@
 'use strict'
 
 const { Model } = require('sequelize')
+
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
@@ -9,6 +10,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: {
           name: 'user_id',
         },
+      })
+
+      User.hasMany(models.House, {
+        as: 'houses',
+        foreignKey: 'owner_id',
       })
     }
   }

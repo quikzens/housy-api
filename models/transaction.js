@@ -29,6 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       check_in: DataTypes.STRING,
       check_out: DataTypes.STRING,
       house_id: DataTypes.INTEGER,
+      user_id: DataTypes.INTEGER,
       total: DataTypes.INTEGER,
       status: DataTypes.STRING,
       attachment: DataTypes.STRING,

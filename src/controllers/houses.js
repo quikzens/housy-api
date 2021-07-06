@@ -106,6 +106,12 @@ exports.getHouse = async (req, res) => {
 }
 
 exports.addHouse = async (req, res) => {
+  // if status user is listed as 'tenant', don't let him do this action
+  const { statusUser } = req
+  if (statusUser === 'tenant') {
+    return res.send("Sorry, you're a tenant")
+  }
+
   const path = process.env.PATH_FILE
   let houseData = req.body
   const image = req.files.imageFile[0].filename
@@ -171,6 +177,12 @@ exports.addHouse = async (req, res) => {
 }
 
 exports.editHouse = async (req, res) => {
+  // if status user is listed as 'tenant', don't let him do this action
+  const { statusUser } = req
+  if (statusUser === 'tenant') {
+    return res.send("Sorry, you're a tenant")
+  }
+
   const id = req.params.id
 
   try {
@@ -204,6 +216,12 @@ exports.editHouse = async (req, res) => {
 }
 
 exports.deleteHouse = async (req, res) => {
+  // if status user is listed as 'tenant', don't let him do this action
+  const { statusUser } = req
+  if (statusUser === 'tenant') {
+    return res.send("Sorry, you're a tenant")
+  }
+
   const id = req.params.id
 
   try {

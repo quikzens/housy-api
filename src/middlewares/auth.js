@@ -26,6 +26,7 @@ exports.auth = (req, res, next) => {
     })
 
     req.idUser = verified.id
+    req.statusUser = verified.status
 
     next()
   } catch (error) {

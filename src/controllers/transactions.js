@@ -103,7 +103,7 @@ exports.editTransaction = async (req, res) => {
     })
     if (!checkHouse) {
       return res.send({
-        message: `Tidak ada house dengan id ${newTransaction.house_id}`,
+        message: `Maaf, tidak ada house dengan id ${newTransaction.house_id}`,
       })
     }
 
@@ -112,7 +112,7 @@ exports.editTransaction = async (req, res) => {
     })
     if (!checkUser) {
       return res.send({
-        message: `Tidak ada user dengan id ${newTransaction.user_id}`,
+        message: `Maaf, tidak ada user dengan id ${newTransaction.user_id}`,
       })
     }
 
@@ -169,6 +169,82 @@ exports.editTransaction = async (req, res) => {
     res.send({
       status: 'successs',
       message: 'resource has successfully updated',
+      data: transaction,
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).send({
+      status: 'failed',
+      message: 'internal server error',
+    })
+  }
+}
+
+exports.addAttachment = async (req, res) => {
+  const id = req.params.id
+  const attachment = req.files.attachment[0].filename
+
+  let newTransaction = req.body
+  newTransaction = {
+    ...newTransaction,
+    attachment,
+    updated_at: new Date(),
+  }
+
+  try {
+    await Transaction.update(newTransaction, {
+      where: {
+        id,
+      },
+    })
+
+    let transaction = await Transaction.findOne({
+      where: {
+        id: id,
+      },
+      include: [
+        {
+          model: House,
+          as: 'house',
+          include: [
+            {
+              model: City,
+              as: 'city',
+              attributes: {
+                exclude: ['created_at', 'updated_at'],
+              },
+            },
+          ],
+          attributes: {
+            exclude: ['created_at', 'updated_at', 'city_id'],
+          },
+        },
+        {
+          model: User,
+          as: 'user',
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'password'],
+          },
+        },
+      ],
+      attributes: {
+        exclude: ['created_at', 'updated_at', 'house_id', 'user_id'],
+      },
+    })
+
+    // change amenities type, so it fits in frontend
+    transaction = JSON.parse(JSON.stringify(transaction))
+    transaction = {
+      ...transaction,
+      house: {
+        ...transaction.house,
+        amenities: transaction.house.amenities.split(','),
+      },
+    }
+
+    res.send({
+      status: 'successs',
+      message: 'attachment has successfully added',
       data: transaction,
     })
   } catch (error) {
@@ -293,6 +369,32 @@ exports.getTransactions = async (req, res) => {
       status: 'successs',
       message: 'resources has successfully get',
       data: transactions,
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).send({
+      status: 'failed',
+      message: 'internal server error',
+    })
+  }
+}
+
+exports.deleteTransaction = async (req, res) => {
+  const id = req.params.id
+
+  try {
+    await Transaction.destroy({
+      where: {
+        id,
+      },
+    })
+
+    res.send({
+      status: 'successs',
+      message: 'transaction has successfully deleted',
+      data: {
+        id,
+      },
     })
   } catch (error) {
     console.log(error)

@@ -11,8 +11,10 @@ const {
 const {
   addTransaction,
   editTransaction,
+  deleteTransaction,
   getTransaction,
   getTransactions,
+  addAttachment,
 } = require('../controllers/transactions')
 const { getUsers, signUp, signIn, deleteUser } = require('../controllers/users')
 
@@ -35,6 +37,13 @@ route.delete('/house/:id', auth, deleteHouse)
 
 route.post('/transaction', auth, addTransaction)
 route.patch('/order/:id', auth, editTransaction)
+route.patch(
+  '/order/addattachment/:id',
+  auth,
+  uploadFile('attachment'),
+  addAttachment
+)
+route.delete('/order/:id', auth, deleteTransaction)
 route.get('/order/:id', auth, getTransaction)
 route.get('/orders', auth, getTransactions)
 

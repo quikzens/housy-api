@@ -20,6 +20,17 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
+          fullname: 'Iron Man',
+          username: 'ironman',
+          email: 'ironman@gmail.com',
+          password: await bcrypt.hash('loveironman', hashStrenght),
+          list_as: 'owner',
+          gender: 'male',
+          address: 'New York City',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
           fullname: 'Spiderman',
           username: 'spiderman',
           email: 'spiderman@gmail.com',

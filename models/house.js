@@ -1,4 +1,5 @@
 'use strict'
+
 const { Model } = require('sequelize')
 
 module.exports = (sequelize, DataTypes) => {
@@ -22,6 +23,11 @@ module.exports = (sequelize, DataTypes) => {
           name: 'house_id',
         },
       })
+
+      House.belongsTo(models.User, {
+        foreignKey: 'owner_id',
+        as: 'user',
+      })
     }
   }
 
@@ -29,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: DataTypes.STRING,
       city_id: DataTypes.INTEGER,
+      owner_id: DataTypes.INTEGER,
       address: DataTypes.STRING,
       price: DataTypes.INTEGER,
       type_rent: DataTypes.STRING,

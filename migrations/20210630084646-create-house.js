@@ -20,6 +20,9 @@ module.exports = {
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       },
+      owner_id: {
+        type: Sequelize.INTEGER,
+      },
       address: {
         type: Sequelize.STRING,
       },
