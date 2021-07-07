@@ -13,20 +13,25 @@ module.exports = (sequelize, DataTypes) => {
       House.belongsTo(models.City, {
         as: 'city',
         foreignKey: {
-          name: 'city_id',
+          name: 'cityId',
         },
       })
 
       House.hasOne(models.Transaction, {
         as: 'transaction',
         foreignKey: {
-          name: 'house_id',
+          name: 'houseId',
         },
       })
 
       House.belongsTo(models.User, {
-        foreignKey: 'owner_id',
+        foreignKey: 'ownerId',
         as: 'user',
+      })
+
+      House.hasMany(models.Image, {
+        as: 'detailImages',
+        foreignKey: 'houseId',
       })
     }
   }
@@ -34,17 +39,16 @@ module.exports = (sequelize, DataTypes) => {
   House.init(
     {
       name: DataTypes.STRING,
-      city_id: DataTypes.INTEGER,
-      owner_id: DataTypes.INTEGER,
+      cityId: DataTypes.INTEGER,
+      ownerId: DataTypes.INTEGER,
       address: DataTypes.STRING,
       price: DataTypes.INTEGER,
-      type_rent: DataTypes.STRING,
+      typeRent: DataTypes.STRING,
       amenities: DataTypes.STRING,
       bedroom: DataTypes.INTEGER,
       bathroom: DataTypes.INTEGER,
       image: DataTypes.STRING,
-      created_at: DataTypes.DATE,
-      updated_at: DataTypes.DATE,
+      area: DataTypes.STRING,
     },
     {
       sequelize,

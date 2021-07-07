@@ -11,14 +11,14 @@ module.exports = (sequelize, DataTypes) => {
       Transaction.belongsTo(models.House, {
         as: 'house',
         foreignKey: {
-          name: 'house_id',
+          name: 'houseId',
         },
       })
 
       Transaction.belongsTo(models.User, {
         as: 'user',
         foreignKey: {
-          name: 'user_id',
+          name: 'userId',
         },
       })
     }
@@ -26,15 +26,15 @@ module.exports = (sequelize, DataTypes) => {
 
   Transaction.init(
     {
-      check_in: DataTypes.STRING,
-      check_out: DataTypes.STRING,
-      house_id: DataTypes.INTEGER,
-      user_id: DataTypes.INTEGER,
+      checkIn: DataTypes.STRING,
+      checkOut: DataTypes.STRING,
+      houseId: DataTypes.INTEGER,
+      userId: DataTypes.INTEGER,
       total: DataTypes.INTEGER,
       status: DataTypes.STRING,
       attachment: DataTypes.STRING,
-      created_at: DataTypes.DATE,
-      updated_at: DataTypes.DATE,
+      createdAt: DataTypes.DATE,
+      updatedAt: DataTypes.DATE,
     },
     {
       sequelize,

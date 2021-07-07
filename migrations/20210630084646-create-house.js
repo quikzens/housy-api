@@ -11,7 +11,7 @@ module.exports = {
       name: {
         type: Sequelize.STRING,
       },
-      city_id: {
+      cityId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Cities',
@@ -20,8 +20,14 @@ module.exports = {
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       },
-      owner_id: {
+      ownerId: {
         type: Sequelize.INTEGER,
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
       },
       address: {
         type: Sequelize.STRING,
@@ -29,7 +35,13 @@ module.exports = {
       price: {
         type: Sequelize.INTEGER,
       },
-      type_rent: {
+      typeRent: {
+        type: Sequelize.STRING,
+      },
+      area: {
+        type: Sequelize.STRING,
+      },
+      description: {
         type: Sequelize.STRING,
       },
       amenities: {
@@ -44,11 +56,11 @@ module.exports = {
       image: {
         type: Sequelize.STRING,
       },
-      created_at: {
+      createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
       },
-      updated_at: {
+      updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
       },

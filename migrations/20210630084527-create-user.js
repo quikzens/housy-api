@@ -20,13 +20,22 @@ module.exports = {
       password: {
         type: Sequelize.STRING,
       },
-      list_as: {
+      listAs: {
         type: Sequelize.STRING,
       },
       gender: {
         type: Sequelize.STRING,
       },
+      phone: {
+        type: Sequelize.STRING,
+      },
       address: {
+        type: Sequelize.STRING,
+      },
+      avatar: {
+        type: Sequelize.STRING,
+      },
+      profileImage: {
         type: Sequelize.STRING,
       },
       createdAt: {

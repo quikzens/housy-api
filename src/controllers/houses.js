@@ -1,4 +1,4 @@
-const { House, City } = require('../../models')
+const { House, City, User } = require('../../models')
 const { Op } = require('sequelize')
 const { lte, like } = Op
 
@@ -6,14 +6,14 @@ exports.getHouses = async (req, res) => {
   const path = process.env.PATH_FILE
   let filters = req.query
 
-  if (filters.hasOwnProperty('below_price')) {
+  if (filters.hasOwnProperty('belowPrice')) {
     filters = {
       ...filters,
       price: {
-        [lte]: parseInt(filters.below_price),
+        [lte]: parseInt(filters.belowPrice),
       },
     }
-    delete filters.below_price
+    delete filters.belowPrice
   }
 
   if (filters.hasOwnProperty('amenities')) {
@@ -33,9 +33,16 @@ exports.getHouses = async (req, res) => {
           model: City,
           as: 'city',
         },
+        {
+          model: User,
+          as: 'user',
+          attributes: {
+            exclude: ['password'],
+          },
+        },
       ],
       attributes: {
-        exclude: ['created_at', 'updated_at'],
+        exclude: ['createdAt', 'updatedAt', 'cityId', 'ownerId'],
       },
     })
 
@@ -65,6 +72,7 @@ exports.getHouses = async (req, res) => {
 
 exports.getHouse = async (req, res) => {
   const id = req.params.id
+
   try {
     let house = await House.findOne({
       where: {
@@ -75,12 +83,19 @@ exports.getHouse = async (req, res) => {
           model: City,
           as: 'city',
           attributes: {
-            exclude: ['created_at', 'updated_at'],
+            exclude: ['createdAt', 'updatedAt'],
+          },
+        },
+        {
+          model: User,
+          as: 'user',
+          attributes: {
+            exclude: ['password'],
           },
         },
       ],
       attributes: {
-        exclude: ['created_at', 'updated_at', 'city_id'],
+        exclude: ['createdAt', 'updatedAt', 'cityId', 'ownerId'],
       },
     })
 
@@ -107,9 +122,12 @@ exports.getHouse = async (req, res) => {
 
 exports.addHouse = async (req, res) => {
   // if status user is listed as 'tenant', don't let him do this action
-  const { statusUser } = req
+  const { idUser, statusUser } = req
   if (statusUser === 'tenant') {
-    return res.send("Sorry, you're a tenant")
+    return res.send({
+      status: 'failed',
+      message: "Sorry, you're a tenant",
+    })
   }
 
   const path = process.env.PATH_FILE
@@ -120,17 +138,18 @@ exports.addHouse = async (req, res) => {
   houseData = {
     ...houseData,
     image,
-    created_at: new Date(),
-    updated_at: new Date(),
+    ownerId: idUser,
+    createdAt: new Date(),
+    updatedAt: new Date(),
   }
 
   try {
     const checkCity = await City.findOne({
-      where: { id: houseData.city_id },
+      where: { id: houseData.cityId },
     })
     if (!checkCity) {
       return res.send({
-        message: `Tidak ada city dengan id ${houseData.city_id}`,
+        message: `Tidak ada city dengan id ${houseData.cityId}`,
       })
     }
 
@@ -145,12 +164,19 @@ exports.addHouse = async (req, res) => {
           model: City,
           as: 'city',
           attributes: {
-            exclude: ['created_at', 'updated_at'],
+            exclude: ['createdAt', 'updatedAt'],
+          },
+        },
+        {
+          model: User,
+          as: 'user',
+          attributes: {
+            exclude: ['password'],
           },
         },
       ],
       attributes: {
-        exclude: ['created_at', 'updated_at', 'city_id'],
+        exclude: ['createdAt', 'updatedAt', 'cityId', 'ownerId'],
       },
     })
 
@@ -180,7 +206,10 @@ exports.editHouse = async (req, res) => {
   // if status user is listed as 'tenant', don't let him do this action
   const { statusUser } = req
   if (statusUser === 'tenant') {
-    return res.send("Sorry, you're a tenant")
+    return res.send({
+      status: 'failed',
+      message: "Sorry, you're a tenant",
+    })
   }
 
   const id = req.params.id
@@ -196,8 +225,24 @@ exports.editHouse = async (req, res) => {
       where: {
         id,
       },
+      include: [
+        {
+          model: City,
+          as: 'city',
+          attributes: {
+            exclude: ['createdAt', 'updatedAt'],
+          },
+        },
+        {
+          model: User,
+          as: 'user',
+          attributes: {
+            exclude: ['password'],
+          },
+        },
+      ],
       attributes: {
-        exclude: ['created_at', 'updated_at'],
+        exclude: ['createdAt', 'updatedAt'],
       },
     })
 

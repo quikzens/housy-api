@@ -17,12 +17,12 @@ exports.getUsers = async (req, res) => {
               model: City,
               as: 'city',
               attributes: {
-                exclude: ['created_at', 'updated_at'],
+                exclude: ['createdAt', 'updatedAt'],
               },
             },
           ],
           attributes: {
-            exclude: ['created_at', 'updated_at', 'city_id', 'owner_id'],
+            exclude: ['createdAt', 'updatedAt', 'cityId', 'ownerId'],
           },
         },
       ],
@@ -48,15 +48,16 @@ exports.getUsers = async (req, res) => {
 exports.signUp = async (req, res) => {
   try {
     const userData = req.body
-    const { email, password } = req.body
+    const { username, password } = req.body
 
     const schema = joi.object({
       fullname: joi.string().min(3).required(),
       username: joi.string().min(3).required(),
       email: joi.string().email().required(),
       password: joi.string().min(8).required(),
-      list_as: joi.string().required(),
+      listAs: joi.string().required(),
       gender: joi.string().required(),
+      phone: joi.string().required(),
       address: joi.string().required(),
     })
 
@@ -68,15 +69,15 @@ exports.signUp = async (req, res) => {
       })
     }
 
-    const checkEmail = await User.findOne({
+    const checkUsername = await User.findOne({
       where: {
-        email,
+        username,
       },
     })
-    if (checkEmail) {
+    if (checkUsername) {
       return res.send({
         status: 'failed',
-        message: 'Email Already Registered',
+        message: 'Username already registered',
       })
     }
 
@@ -91,7 +92,7 @@ exports.signUp = async (req, res) => {
     const token = jwt.sign(
       {
         id: user.id,
-        status: user.list_as,
+        status: user.listAs,
       },
       secretKey
     )
@@ -157,7 +158,7 @@ exports.signIn = async (req, res) => {
     const token = jwt.sign(
       {
         id: checkUsername.id,
-        status: checkUsername.list_as,
+        status: checkUsername.listAs,
       },
       secretKey
     )

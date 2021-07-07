@@ -14,6 +14,12 @@ module.exports = {
         {
           name: 'Surabaya',
         },
+        {
+          name: 'Yogyakarta',
+        },
+        {
+          name: 'Semarang',
+        },
       ],
       {}
     )

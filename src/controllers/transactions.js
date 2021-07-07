@@ -2,29 +2,32 @@ const { Transaction, House, City, User } = require('../../models')
 
 exports.addTransaction = async (req, res) => {
   let transactionData = req.body
+  const { idUser } = req
+
   // change amenities type, so it fits in database
   transactionData = {
     ...transactionData,
-    created_at: new Date(),
-    updated_at: new Date(),
+    userId: idUser,
+    createdAt: new Date(),
+    updatedAt: new Date(),
   }
 
   try {
     const checkHouse = await House.findOne({
-      where: { id: transactionData.house_id },
+      where: { id: transactionData.houseId },
     })
     if (!checkHouse) {
       return res.send({
-        message: `Tidak ada house dengan id ${transactionData.house_id}`,
+        message: `Tidak ada house dengan id ${transactionData.houseId}`,
       })
     }
 
     const checkUser = await User.findOne({
-      where: { id: transactionData.user_id },
+      where: { id: transactionData.userId },
     })
     if (!checkUser) {
       return res.send({
-        message: `Tidak ada user dengan id ${transactionData.user_id}`,
+        message: `Tidak ada user dengan id ${transactionData.userId}`,
       })
     }
 
@@ -43,12 +46,19 @@ exports.addTransaction = async (req, res) => {
               model: City,
               as: 'city',
               attributes: {
-                exclude: ['created_at', 'updated_at'],
+                exclude: ['createdAt', 'updatedAt'],
+              },
+            },
+            {
+              model: User,
+              as: 'user',
+              attributes: {
+                exclude: ['createdAt', 'updatedAt', 'password'],
               },
             },
           ],
           attributes: {
-            exclude: ['created_at', 'updated_at', 'city_id'],
+            exclude: ['createdAt', 'updatedAt', 'cityId', 'ownerId'],
           },
         },
         {
@@ -60,7 +70,7 @@ exports.addTransaction = async (req, res) => {
         },
       ],
       attributes: {
-        exclude: ['created_at', 'updated_at', 'house_id', 'user_id'],
+        exclude: ['createdAt', 'updatedAt', 'houseId', 'userId'],
       },
     })
 
@@ -94,26 +104,30 @@ exports.editTransaction = async (req, res) => {
   let newTransaction = req.body
   newTransaction = {
     ...newTransaction,
-    updated_at: new Date(),
+    updatedAt: new Date(),
   }
 
   try {
-    const checkHouse = await House.findOne({
-      where: { id: newTransaction.house_id },
-    })
-    if (!checkHouse) {
-      return res.send({
-        message: `Maaf, tidak ada house dengan id ${newTransaction.house_id}`,
+    if (newTransaction.hasOwnProperty('houseId')) {
+      const checkHouse = await House.findOne({
+        where: { id: newTransaction.houseId },
       })
+      if (!checkHouse) {
+        return res.send({
+          message: `Maaf, tidak ada house dengan id ${newTransaction.houseId}`,
+        })
+      }
     }
 
-    const checkUser = await User.findOne({
-      where: { id: newTransaction.user_id },
-    })
-    if (!checkUser) {
-      return res.send({
-        message: `Maaf, tidak ada user dengan id ${newTransaction.user_id}`,
+    if (newTransaction.hasOwnProperty('userId')) {
+      const checkUser = await User.findOne({
+        where: { id: newTransaction.userId },
       })
+      if (!checkUser) {
+        return res.send({
+          message: `Maaf, tidak ada user dengan id ${newTransaction.userId}`,
+        })
+      }
     }
 
     await Transaction.update(newTransaction, {
@@ -135,12 +149,19 @@ exports.editTransaction = async (req, res) => {
               model: City,
               as: 'city',
               attributes: {
-                exclude: ['created_at', 'updated_at'],
+                exclude: ['createdAt', 'updatedAt'],
+              },
+            },
+            {
+              model: User,
+              as: 'user',
+              attributes: {
+                exclude: ['createdAt', 'updatedAt', 'password'],
               },
             },
           ],
           attributes: {
-            exclude: ['created_at', 'updated_at', 'city_id'],
+            exclude: ['createdAt', 'updatedAt', 'cityId', 'ownerId'],
           },
         },
         {
@@ -152,7 +173,7 @@ exports.editTransaction = async (req, res) => {
         },
       ],
       attributes: {
-        exclude: ['created_at', 'updated_at', 'house_id', 'user_id'],
+        exclude: ['createdAt', 'updatedAt', 'houseId', 'userId'],
       },
     })
 
@@ -211,12 +232,19 @@ exports.addAttachment = async (req, res) => {
               model: City,
               as: 'city',
               attributes: {
-                exclude: ['created_at', 'updated_at'],
+                exclude: ['createdAt', 'updatedAt'],
+              },
+            },
+            {
+              model: User,
+              as: 'user',
+              attributes: {
+                exclude: ['createdAt', 'updatedAt', 'password'],
               },
             },
           ],
           attributes: {
-            exclude: ['created_at', 'updated_at', 'city_id'],
+            exclude: ['createdAt', 'updatedAt', 'cityId', 'ownerId'],
           },
         },
         {
@@ -228,7 +256,7 @@ exports.addAttachment = async (req, res) => {
         },
       ],
       attributes: {
-        exclude: ['created_at', 'updated_at', 'house_id', 'user_id'],
+        exclude: ['createdAt', 'updatedAt', 'houseId', 'userId'],
       },
     })
 
@@ -273,12 +301,19 @@ exports.getTransaction = async (req, res) => {
               model: City,
               as: 'city',
               attributes: {
-                exclude: ['created_at', 'updated_at'],
+                exclude: ['createdAt', 'updatedAt'],
+              },
+            },
+            {
+              model: User,
+              as: 'user',
+              attributes: {
+                exclude: ['createdAt', 'updatedAt', 'password'],
               },
             },
           ],
           attributes: {
-            exclude: ['created_at', 'updated_at', 'city_id'],
+            exclude: ['createdAt', 'updatedAt', 'cityId', 'ownerId'],
           },
         },
         {
@@ -290,7 +325,7 @@ exports.getTransaction = async (req, res) => {
         },
       ],
       attributes: {
-        exclude: ['created_at', 'updated_at', 'house_id', 'user_id'],
+        exclude: ['createdAt', 'updatedAt', 'houseId', 'userId'],
       },
     })
 
@@ -330,12 +365,19 @@ exports.getTransactions = async (req, res) => {
               model: City,
               as: 'city',
               attributes: {
-                exclude: ['created_at', 'updated_at'],
+                exclude: ['createdAt', 'updatedAt'],
+              },
+            },
+            {
+              model: User,
+              as: 'user',
+              attributes: {
+                exclude: ['createdAt', 'updatedAt', 'password'],
               },
             },
           ],
           attributes: {
-            exclude: ['created_at', 'updated_at', 'city_id'],
+            exclude: ['createdAt', 'updatedAt', 'cityId', 'ownerId'],
           },
         },
         {
@@ -347,7 +389,7 @@ exports.getTransactions = async (req, res) => {
         },
       ],
       attributes: {
-        exclude: ['created_at', 'updated_at', 'house_id', 'user_id'],
+        exclude: ['createdAt', 'updatedAt', 'houseId', 'userId'],
       },
     })
 

@@ -8,13 +8,13 @@ module.exports = (sequelize, DataTypes) => {
       User.hasOne(models.Transaction, {
         as: 'transaction',
         foreignKey: {
-          name: 'user_id',
+          name: 'userId',
         },
       })
 
       User.hasMany(models.House, {
         as: 'houses',
-        foreignKey: 'owner_id',
+        foreignKey: 'ownerId',
       })
     }
   }
@@ -25,12 +25,16 @@ module.exports = (sequelize, DataTypes) => {
       username: DataTypes.STRING,
       email: DataTypes.STRING,
       password: DataTypes.STRING,
-      list_as: DataTypes.STRING,
+      listAs: DataTypes.STRING,
       gender: DataTypes.STRING,
       address: DataTypes.STRING,
+      phone: DataTypes.STRING,
+      avatar: DataTypes.STRING,
+      profileImage: DataTypes.STRING,
     },
     {
       sequelize,
+      timestamps: false,
       modelName: 'User',
       tableName: 'users',
     }

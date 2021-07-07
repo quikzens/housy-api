@@ -8,13 +8,13 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
       },
-      check_in: {
+      checkIn: {
         type: Sequelize.STRING,
       },
-      check_out: {
+      checkOut: {
         type: Sequelize.STRING,
       },
-      house_id: {
+      houseId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Houses',
@@ -23,7 +23,7 @@ module.exports = {
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       },
-      user_id: {
+      userId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Users',
@@ -41,11 +41,11 @@ module.exports = {
       attachment: {
         type: Sequelize.STRING,
       },
-      created_at: {
+      createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
       },
-      updated_at: {
+      updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
       },
