@@ -16,7 +16,14 @@ const {
   getTransactions,
   addAttachment,
 } = require('../controllers/transactions')
-const { getUsers, signUp, signIn, deleteUser } = require('../controllers/users')
+const {
+  getUser,
+  getUsers,
+  signUp,
+  signIn,
+  deleteUser,
+  changePassword,
+} = require('../controllers/users')
 
 // Middleware
 const { auth } = require('../middlewares/auth')
@@ -26,6 +33,8 @@ const route = Router()
 
 route.post('/signin', signIn)
 route.post('/signup', signUp)
+route.get('/user', auth, getUser)
+route.patch('/user/changepassword', auth, changePassword)
 route.get('/users', auth, getUsers)
 route.delete('/user/:id', auth, deleteUser)
 

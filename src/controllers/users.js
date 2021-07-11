@@ -5,6 +5,51 @@ const jwt = require('jsonwebtoken')
 
 const secretKey = process.env.SECRET_KEY
 
+exports.getUser = async (req, res) => {
+  const { idUser } = req
+
+  try {
+    const user = await User.findOne({
+      where: {
+        id: idUser,
+      },
+      include: [
+        {
+          model: House,
+          as: 'houses',
+          include: [
+            {
+              model: City,
+              as: 'city',
+              attributes: {
+                exclude: ['createdAt', 'updatedAt'],
+              },
+            },
+          ],
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'cityId', 'ownerId'],
+          },
+        },
+      ],
+      attributes: {
+        exclude: ['createdAt', 'updatedAt', 'password'],
+      },
+    })
+
+    res.send({
+      status: 'success',
+      message: 'resources has successfully get',
+      data: user,
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).send({
+      status: 'failed',
+      message: 'internal server error',
+    })
+  }
+}
+
 exports.getUsers = async (req, res) => {
   try {
     const users = await User.findAll({
@@ -101,6 +146,7 @@ exports.signUp = async (req, res) => {
       status: 'success',
       data: {
         username: user.username,
+        listAs: user.listAs,
         token,
       },
     })
@@ -167,6 +213,7 @@ exports.signIn = async (req, res) => {
       status: 'success',
       data: {
         username: checkUsername.username,
+        listAs: checkUsername.listAs,
         token,
       },
     })
@@ -195,6 +242,64 @@ exports.deleteUser = async (req, res) => {
       data: {
         id,
       },
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).send({
+      status: 'failed',
+      message: 'internal server error',
+    })
+  }
+}
+
+exports.changePassword = async (req, res) => {
+  const { idUser } = req
+  const { oldPassword, newPassword } = req.body
+
+  try {
+    let user = await User.findOne({
+      where: {
+        id: idUser,
+      },
+      attributes: {
+        exclude: ['createdAt', 'updatedAt'],
+      },
+    })
+
+    const isPassed = await bcrypt.compare(oldPassword, user.password)
+    if (!isPassed) {
+      return res.send({
+        status: 'failed',
+        message: 'old password is wrong',
+      })
+    }
+
+    const hashStrenght = 10
+    const hashedPassword = await bcrypt.hash(newPassword, hashStrenght)
+
+    await User.update(
+      {
+        password: hashedPassword,
+      },
+      {
+        where: {
+          id: idUser,
+        },
+      }
+    )
+
+    user = await User.findOne({
+      where: {
+        id: idUser,
+      },
+      attributes: {
+        exclude: ['createdAt', 'updatedAt'],
+      },
+    })
+
+    res.send({
+      status: 'success',
+      message: 'password has been changed',
     })
   } catch (error) {
     console.log(error)

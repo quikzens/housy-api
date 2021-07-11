@@ -1,4 +1,7 @@
 const { Transaction, House, City, User } = require('../../models')
+const { Op } = require('sequelize')
+const { or } = Op
+const path = process.env.PATH_FILE
 
 exports.addTransaction = async (req, res) => {
   let transactionData = req.body
@@ -8,6 +11,7 @@ exports.addTransaction = async (req, res) => {
   transactionData = {
     ...transactionData,
     userId: idUser,
+    status: 'Waiting Payment',
     createdAt: new Date(),
     updatedAt: new Date(),
   }
@@ -29,6 +33,11 @@ exports.addTransaction = async (req, res) => {
       return res.send({
         message: `Tidak ada user dengan id ${transactionData.userId}`,
       })
+    }
+
+    transactionData = {
+      ...transactionData,
+      ownerId: checkHouse.ownerId,
     }
 
     let transaction = await Transaction.create(transactionData)
@@ -208,6 +217,7 @@ exports.addAttachment = async (req, res) => {
   let newTransaction = req.body
   newTransaction = {
     ...newTransaction,
+    status: 'Waiting Approve',
     attachment,
     updated_at: new Date(),
   }
@@ -354,8 +364,34 @@ exports.getTransaction = async (req, res) => {
 }
 
 exports.getTransactions = async (req, res) => {
+  const { idUser, statusUser } = req
+  const { type } = req.query
+
+  let whereQuery = {}
+
+  if (statusUser === 'tenant' && type === 'booking') {
+    whereQuery = {
+      userId: idUser,
+      status: {
+        [or]: ['Waiting Payment', 'Waiting Approve'],
+      },
+    }
+  }
+
+  if (statusUser === 'owner' && type === 'incoming') {
+    whereQuery = {
+      ownerId: idUser,
+      status: {
+        [or]: ['Waiting Approve', 'Approve', 'Cancel'],
+      },
+    }
+  }
+
   try {
     let transactions = await Transaction.findAll({
+      where: {
+        ...whereQuery,
+      },
       include: [
         {
           model: House,
@@ -402,6 +438,7 @@ exports.getTransactions = async (req, res) => {
           ...transaction.house,
           amenities: transaction.house.amenities.split(','),
         },
+        attachment: path + transaction.attachment,
       }
 
       return transaction

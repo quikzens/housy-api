@@ -71,6 +71,7 @@ exports.getHouses = async (req, res) => {
 }
 
 exports.getHouse = async (req, res) => {
+  const path = process.env.PATH_FILE
   const id = req.params.id
 
   try {
@@ -104,6 +105,7 @@ exports.getHouse = async (req, res) => {
     house = {
       ...house,
       amenities: house.amenities.split(','),
+      image: house.image ? path + house.image : null,
     }
 
     res.send({

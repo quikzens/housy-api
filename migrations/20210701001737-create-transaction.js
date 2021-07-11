@@ -32,6 +32,9 @@ module.exports = {
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       },
+      ownerId: {
+        type: Sequelize.INTEGER,
+      },
       total: {
         type: Sequelize.INTEGER,
       },

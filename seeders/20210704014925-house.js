@@ -16,7 +16,7 @@ module.exports = {
           bathroom: 2,
           description:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vitae elementum curabitur vitae nunc sed velit dignissim. Enim ut tellus elementum sagittis vitae et leo duis ut. Sociis natoque penatibus et magnis. Nec feugiat nisl pretium fusce. Purus gravida quis blandit turpis. Id nibh tortor id aliquet lectus proin. Augue neque gravida in fermentum et sollicitudin ac. Vel turpis nunc eget lorem dolor. Convallis convallis tellus id interdum velit laoreet id.',
-          image: null,
+          image: 'home-1.jpg',
           cityId: 1,
           ownerId: 1,
         },
@@ -31,7 +31,7 @@ module.exports = {
           bathroom: 1,
           description:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vitae elementum curabitur vitae nunc sed velit dignissim. Enim ut tellus elementum sagittis vitae et leo duis ut. Sociis natoque penatibus et magnis. Nec feugiat nisl pretium fusce. Purus gravida quis blandit turpis. Id nibh tortor id aliquet lectus proin. Augue neque gravida in fermentum et sollicitudin ac. Vel turpis nunc eget lorem dolor. Convallis convallis tellus id interdum velit laoreet id.',
-          image: null,
+          image: 'home-2.jpg',
           cityId: 2,
           ownerId: 1,
         },
@@ -46,7 +46,7 @@ module.exports = {
           bathroom: 3,
           description:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vitae elementum curabitur vitae nunc sed velit dignissim. Enim ut tellus elementum sagittis vitae et leo duis ut. Sociis natoque penatibus et magnis. Nec feugiat nisl pretium fusce. Purus gravida quis blandit turpis. Id nibh tortor id aliquet lectus proin. Augue neque gravida in fermentum et sollicitudin ac. Vel turpis nunc eget lorem dolor. Convallis convallis tellus id interdum velit laoreet id.',
-          image: null,
+          image: 'home-3.jpg',
           cityId: 3,
           ownerId: 1,
         },
@@ -61,7 +61,7 @@ module.exports = {
           bathroom: 3,
           description:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vitae elementum curabitur vitae nunc sed velit dignissim. Enim ut tellus elementum sagittis vitae et leo duis ut. Sociis natoque penatibus et magnis. Nec feugiat nisl pretium fusce. Purus gravida quis blandit turpis. Id nibh tortor id aliquet lectus proin. Augue neque gravida in fermentum et sollicitudin ac. Vel turpis nunc eget lorem dolor. Convallis convallis tellus id interdum velit laoreet id.',
-          image: null,
+          image: 'home-4.jpg',
           cityId: 4,
           ownerId: 4,
         },
@@ -76,7 +76,7 @@ module.exports = {
           bathroom: 4,
           description:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vitae elementum curabitur vitae nunc sed velit dignissim. Enim ut tellus elementum sagittis vitae et leo duis ut. Sociis natoque penatibus et magnis. Nec feugiat nisl pretium fusce. Purus gravida quis blandit turpis. Id nibh tortor id aliquet lectus proin. Augue neque gravida in fermentum et sollicitudin ac. Vel turpis nunc eget lorem dolor. Convallis convallis tellus id interdum velit laoreet id.',
-          image: '',
+          image: 'home-5.jpg',
           cityId: 5,
           ownerId: 4,
         },
@@ -91,7 +91,7 @@ module.exports = {
           bathroom: 1,
           description:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vitae elementum curabitur vitae nunc sed velit dignissim. Enim ut tellus elementum sagittis vitae et leo duis ut. Sociis natoque penatibus et magnis. Nec feugiat nisl pretium fusce. Purus gravida quis blandit turpis. Id nibh tortor id aliquet lectus proin. Augue neque gravida in fermentum et sollicitudin ac. Vel turpis nunc eget lorem dolor. Convallis convallis tellus id interdum velit laoreet id.',
-          image: null,
+          image: 'home-6.jpg',
           cityId: 1,
           ownerId: 4,
         },
