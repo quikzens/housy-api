@@ -40,7 +40,7 @@ exports.uploadFile = (imageFile) => {
   }).fields([
     {
       name: imageFile,
-      maxCount: 1,
+      maxCount: 3,
     },
   ]) // Menentukan jumlah file
 

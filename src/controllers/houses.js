@@ -1,4 +1,4 @@
-const { House, City, User } = require('../../models')
+const { House, City, User, Image } = require('../../models')
 const { Op } = require('sequelize')
 const { lte, like } = Op
 
@@ -94,6 +94,13 @@ exports.getHouse = async (req, res) => {
             exclude: ['password'],
           },
         },
+        {
+          model: Image,
+          as: 'detailImages',
+          attributes: {
+            exclude: ['houseId', 'createdAt', 'updatedAt'],
+          },
+        },
       ],
       attributes: {
         exclude: ['createdAt', 'updatedAt', 'cityId', 'ownerId'],
@@ -107,6 +114,13 @@ exports.getHouse = async (req, res) => {
       amenities: house.amenities.split(','),
       image: house.image ? path + house.image : null,
     }
+
+    house.detailImages = house.detailImages.map((image) => {
+      return {
+        ...image,
+        url: image.url ? path + image.url : null,
+      }
+    })
 
     res.send({
       status: 'success',

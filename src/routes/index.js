@@ -23,7 +23,10 @@ const {
   signIn,
   deleteUser,
   changePassword,
+  addAvatar,
+  addProfileImage,
 } = require('../controllers/users')
+const { addImages } = require('../controllers/images')
 
 // Middleware
 const { auth } = require('../middlewares/auth')
@@ -35,6 +38,8 @@ route.post('/signin', signIn)
 route.post('/signup', signUp)
 route.get('/user', auth, getUser)
 route.patch('/user/changepassword', auth, changePassword)
+route.patch('/user/profile', auth, uploadFile('profile'), addProfileImage)
+route.patch('/user/avatar', auth, uploadFile('avatar'), addAvatar)
 route.get('/users', auth, getUsers)
 route.delete('/user/:id', auth, deleteUser)
 
@@ -55,5 +60,7 @@ route.patch(
 route.delete('/order/:id', auth, deleteTransaction)
 route.get('/order/:id', auth, getTransaction)
 route.get('/orders', auth, getTransactions)
+
+route.post('/images/:id', auth, uploadFile('details'), addImages)
 
 module.exports = route

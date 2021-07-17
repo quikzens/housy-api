@@ -4,12 +4,13 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
 const secretKey = process.env.SECRET_KEY
+const path = process.env.PATH_FILE
 
 exports.getUser = async (req, res) => {
   const { idUser } = req
 
   try {
-    const user = await User.findOne({
+    let user = await User.findOne({
       where: {
         id: idUser,
       },
@@ -35,6 +36,13 @@ exports.getUser = async (req, res) => {
         exclude: ['createdAt', 'updatedAt', 'password'],
       },
     })
+
+    user = JSON.parse(JSON.stringify(user))
+    user = {
+      ...user,
+      avatar: user.avatar ? path + user.avatar : null,
+      profileImage: user.profileImage ? path + user.profileImage : null,
+    }
 
     res.send({
       status: 'success',
@@ -145,6 +153,7 @@ exports.signUp = async (req, res) => {
     res.send({
       status: 'success',
       data: {
+        id: checkUsername.id,
         username: user.username,
         listAs: user.listAs,
         token,
@@ -212,8 +221,10 @@ exports.signIn = async (req, res) => {
     res.send({
       status: 'success',
       data: {
+        id: checkUsername.id,
         username: checkUsername.username,
         listAs: checkUsername.listAs,
+        avatar: checkUsername.avatar ? path + checkUsername.avatar : null,
         token,
       },
     })
@@ -300,6 +311,90 @@ exports.changePassword = async (req, res) => {
     res.send({
       status: 'success',
       message: 'password has been changed',
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).send({
+      status: 'failed',
+      message: 'internal server error',
+    })
+  }
+}
+
+exports.addAvatar = async (req, res) => {
+  const { idUser } = req
+  const avatar = req.files.avatar[0].filename
+
+  try {
+    await User.update(
+      {
+        avatar,
+      },
+      {
+        where: {
+          id: idUser,
+        },
+      }
+    )
+
+    const user = await User.findOne({
+      where: {
+        id: idUser,
+      },
+      attributes: {
+        exclude: ['createdAt', 'updatedAt', 'password'],
+      },
+    })
+
+    res.send({
+      status: 'success',
+      message: 'avatar has been added',
+      data: {
+        ...user,
+        avatar: user.avatar ? path + user.avatar : null,
+      },
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).send({
+      status: 'failed',
+      message: 'internal server error',
+    })
+  }
+}
+
+exports.addProfileImage = async (req, res) => {
+  const { idUser } = req
+  const profileImage = req.files.profile[0].filename
+
+  try {
+    await User.update(
+      {
+        profileImage,
+      },
+      {
+        where: {
+          id: idUser,
+        },
+      }
+    )
+
+    const user = await User.findOne({
+      where: {
+        id: idUser,
+      },
+      attributes: {
+        exclude: ['createdAt', 'updatedAt', 'password'],
+      },
+    })
+
+    res.send({
+      status: 'success',
+      message: 'profile image has been added',
+      data: {
+        ...user,
+        profileImage: user.profileImage ? path + user.profileImage : null,
+      },
     })
   } catch (error) {
     console.log(error)

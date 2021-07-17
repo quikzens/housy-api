@@ -387,6 +387,24 @@ exports.getTransactions = async (req, res) => {
     }
   }
 
+  if (statusUser === 'tenant' && type === 'history') {
+    whereQuery = {
+      userId: idUser,
+      status: {
+        [or]: ['Approve', 'Cancel'],
+      },
+    }
+  }
+
+  if (statusUser === 'owner' && type === 'history') {
+    whereQuery = {
+      ownerId: idUser,
+      status: {
+        [or]: ['Approve', 'Cancel'],
+      },
+    }
+  }
+
   try {
     let transactions = await Transaction.findAll({
       where: {
@@ -438,7 +456,9 @@ exports.getTransactions = async (req, res) => {
           ...transaction.house,
           amenities: transaction.house.amenities.split(','),
         },
-        attachment: path + transaction.attachment,
+        attachment: transaction.attachment
+          ? path + transaction.attachment
+          : null,
       }
 
       return transaction
