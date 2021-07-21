@@ -14,24 +14,6 @@ exports.getUser = async (req, res) => {
       where: {
         id: idUser,
       },
-      include: [
-        {
-          model: House,
-          as: 'houses',
-          include: [
-            {
-              model: City,
-              as: 'city',
-              attributes: {
-                exclude: ['createdAt', 'updatedAt'],
-              },
-            },
-          ],
-          attributes: {
-            exclude: ['createdAt', 'updatedAt', 'cityId', 'ownerId'],
-          },
-        },
-      ],
       attributes: {
         exclude: ['createdAt', 'updatedAt', 'password'],
       },
@@ -153,7 +135,7 @@ exports.signUp = async (req, res) => {
     res.send({
       status: 'success',
       data: {
-        id: checkUsername.id,
+        id: user.id,
         username: user.username,
         listAs: user.listAs,
         token,

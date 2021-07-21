@@ -37,7 +37,7 @@ exports.getHouses = async (req, res) => {
           model: User,
           as: 'user',
           attributes: {
-            exclude: ['password'],
+            exclude: ['createdAt', 'updatedAt', 'password'],
           },
         },
       ],
