@@ -63,7 +63,7 @@ module.exports = {
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vitae elementum curabitur vitae nunc sed velit dignissim. Enim ut tellus elementum sagittis vitae et leo duis ut. Sociis natoque penatibus et magnis. Nec feugiat nisl pretium fusce. Purus gravida quis blandit turpis. Id nibh tortor id aliquet lectus proin. Augue neque gravida in fermentum et sollicitudin ac. Vel turpis nunc eget lorem dolor. Convallis convallis tellus id interdum velit laoreet id.',
           image: 'home-4.jpg',
           cityId: 4,
-          ownerId: 4,
+          ownerId: 1,
         },
         {
           name: 'House Lompoa',
@@ -78,7 +78,7 @@ module.exports = {
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vitae elementum curabitur vitae nunc sed velit dignissim. Enim ut tellus elementum sagittis vitae et leo duis ut. Sociis natoque penatibus et magnis. Nec feugiat nisl pretium fusce. Purus gravida quis blandit turpis. Id nibh tortor id aliquet lectus proin. Augue neque gravida in fermentum et sollicitudin ac. Vel turpis nunc eget lorem dolor. Convallis convallis tellus id interdum velit laoreet id.',
           image: 'home-5.jpg',
           cityId: 5,
-          ownerId: 4,
+          ownerId: 1,
         },
         {
           name: 'House Asgard',
@@ -93,16 +93,14 @@ module.exports = {
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vitae elementum curabitur vitae nunc sed velit dignissim. Enim ut tellus elementum sagittis vitae et leo duis ut. Sociis natoque penatibus et magnis. Nec feugiat nisl pretium fusce. Purus gravida quis blandit turpis. Id nibh tortor id aliquet lectus proin. Augue neque gravida in fermentum et sollicitudin ac. Vel turpis nunc eget lorem dolor. Convallis convallis tellus id interdum velit laoreet id.',
           image: 'home-6.jpg',
           cityId: 1,
-          ownerId: 4,
+          ownerId: 1,
         },
       ],
       {}
     )
   },
 
-  down: async (queryInterface, Sequelize) => {
-    down: (queryInterface, Sequelize) => {
-      return queryInterface.bulkDelete('houses', null, {})
-    }
+  down: (queryInterface, Sequelize) => {
+    return queryInterface.bulkDelete('houses', null, {})
   },
 }
